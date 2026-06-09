@@ -1,7 +1,14 @@
-VERITAS FAVICON UPGRADE
+VERITAS BETTER FAVICON — PRO VERSION
 
-Upload these files to your GitHub repo root:
+This is a sharper favicon:
+- Dark rounded tile
+- Neon cyan/purple edge
+- High-contrast white Veritas V
+- Better readability in tiny browser tabs
+- Apple/mobile icons included
+- Web manifest included
 
+UPLOAD TO GITHUB REPO ROOT:
 - index.html
 - favicon.ico
 - favicon.svg
@@ -13,10 +20,14 @@ Upload these files to your GitHub repo root:
 - icon-512.png
 - site.webmanifest
 
-Do NOT replace config.js.
+OPTIONAL:
+- favicon-preview.png is just a preview. You don't need to upload it, but you can.
 
-After upload:
+DO NOT REPLACE:
+- config.js
+
+AFTER UPLOAD:
 1. Commit changes.
 2. Wait for Vercel deployment.
-3. Hard refresh browser: Ctrl + Shift + R.
-4. If favicon still doesn't change immediately, wait or open in incognito. Browsers cache favicons aggressively.
+3. Hard refresh: Ctrl + Shift + R.
+4. If favicon still looks old, open incognito or wait. Browsers cache favicons aggressively.

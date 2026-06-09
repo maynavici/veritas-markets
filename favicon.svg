@@ -1,18 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="g" x1="70" y1="40" x2="440" y2="470" gradientUnits="userSpaceOnUse">
+    <linearGradient id="edge" x1="80" y1="45" x2="440" y2="470" gradientUnits="userSpaceOnUse">
       <stop stop-color="#32EAFF"/>
-      <stop offset="0.55" stop-color="#7B5CFF"/>
-      <stop offset="1" stop-color="#BB4DFF"/>
+      <stop offset="0.52" stop-color="#7B5CFF"/>
+      <stop offset="1" stop-color="#C84DFF"/>
     </linearGradient>
-    <radialGradient id="r" cx="170" cy="105" r="230" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FFFFFF" stop-opacity="0.9"/>
-      <stop offset="0.24" stop-color="#32EAFF" stop-opacity="0.45"/>
-      <stop offset="1" stop-color="#32EAFF" stop-opacity="0"/>
+    <radialGradient id="glow" cx="150" cy="105" r="310" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#32EAFF" stop-opacity="0.48"/>
+      <stop offset="0.42" stop-color="#7B5CFF" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#02030A" stop-opacity="0"/>
     </radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000000" flood-opacity="0.65"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="16" flood-color="#32EAFF" flood-opacity="0.28"/>
+    </filter>
   </defs>
-  <rect width="512" height="512" rx="118" fill="#02030A"/>
-  <rect x="42" y="42" width="428" height="428" rx="96" fill="url(#g)"/>
-  <rect x="42" y="42" width="428" height="428" rx="96" fill="url(#r)"/>
-  <path d="M151 142h76l55 167 58-167h72L317 376h-75L151 142z" fill="#02030A"/>
+  <rect width="512" height="512" rx="112" fill="#02030A"/>
+  <rect x="36" y="36" width="440" height="440" rx="100" fill="url(#edge)" filter="url(#shadow)"/>
+  <rect x="52" y="52" width="408" height="408" rx="88" fill="#050814"/>
+  <rect x="52" y="52" width="408" height="408" rx="88" fill="url(#glow)"/>
+  <path d="M128 133H208L256 295L304 133H384L297 379H215L128 133Z" fill="#F7FBFF"/>
+  <path d="M232 133H280L257 211L232 133Z" fill="#32EAFF" opacity="0.85"/>
+  <path d="M256 295L304 133H334L275 340H237L178 133H208L256 295Z" fill="#CFEFFF" opacity="0.30"/>
+  <circle cx="392" cy="120" r="18" fill="#32EAFF"/>
 </svg>
