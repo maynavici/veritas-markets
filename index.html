@@ -42,6 +42,475 @@
     .modalbg{position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(16px);z-index:90;display:none;place-items:center;padding:18px}.modalbg.open{display:grid}.modal{width:min(1020px,100%);max-height:92vh;overflow:auto}.divider{height:1px;background:var(--line);margin:18px 0}.legal{max-width:920px}.legal h3{margin-top:24px}.legal p,.legal li{color:var(--soft);line-height:1.75}.hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:stretch;margin-top:24px}
     .checklist{counter-reset:item}.check{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:18px;padding:14px}.check input{width:20px;height:20px;accent-color:var(--cyan);margin-top:2px}.check b{display:block}.check small{display:block;color:var(--muted);line-height:1.5;margin-top:4px}.progress{height:10px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--purple));border-radius:99px}
     @media(max-width:980px){.grid2,.grid3,.grid4,.fieldgrid,.hero-grid{grid-template-columns:1fr}.top{flex-direction:column;align-items:flex-start}.actions{justify-content:flex-start}.title{font-size:44px}}
+  
+/* =========================================================
+   VERITAS MARKETS — PROFESSIONAL VISUAL UPGRADE ONLY
+   Keeps all IDs, JS, Supabase, and app logic intact.
+   ========================================================= */
+
+:root{
+  --bg:#02030a !important;
+  --panel:rgba(8,10,20,.72) !important;
+  --panel2:rgba(255,255,255,.055) !important;
+  --line:rgba(255,255,255,.105) !important;
+  --line2:rgba(255,255,255,.18) !important;
+  --text:#f7fbff !important;
+  --soft:#c3ccdc !important;
+  --muted:#7d879b !important;
+  --cyan:#32eaff !important;
+  --purple:#7b5cff !important;
+  --purple2:#bb4dff !important;
+  --green:#38f8b4 !important;
+  --red:#ff4978 !important;
+  --amber:#ffca69 !important;
+  --glass:rgba(9,11,24,.66);
+  --glass2:rgba(255,255,255,.065);
+  --shadow-soft:0 24px 90px rgba(0,0,0,.55);
+  --shadow-glow:0 0 44px rgba(50,234,255,.12),0 0 70px rgba(123,92,255,.10);
+}
+
+/* Global canvas */
+body{
+  background:
+    radial-gradient(circle at 12% 2%, rgba(50,234,255,.16), transparent 28%),
+    radial-gradient(circle at 88% 0%, rgba(123,92,255,.20), transparent 34%),
+    radial-gradient(circle at 55% 95%, rgba(187,77,255,.09), transparent 36%),
+    linear-gradient(180deg,#02030a 0%,#050713 42%,#02030a 100%) !important;
+  color:var(--text) !important;
+}
+
+body:before{
+  background-image:
+    linear-gradient(rgba(255,255,255,.023) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.023) 1px, transparent 1px) !important;
+  background-size:64px 64px !important;
+  mask-image:radial-gradient(circle at center, black 20%, transparent 82%) !important;
+}
+
+body:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(120deg, transparent 0%, rgba(255,255,255,.035) 46%, transparent 58%),
+    radial-gradient(circle at 50% 10%, rgba(255,255,255,.035), transparent 26%);
+  opacity:.45;
+  mix-blend-mode:screen;
+}
+
+/* Layout polish */
+.wrap{
+  max-width:1500px !important;
+  padding:22px clamp(16px,2.8vw,36px) 40px !important;
+}
+
+/* Top bar becomes premium floating navbar */
+.top{
+  top:14px !important;
+  margin-bottom:18px !important;
+  padding:12px 14px !important;
+  border:1px solid rgba(255,255,255,.11) !important;
+  border-radius:26px !important;
+  background:
+    linear-gradient(180deg, rgba(18,21,39,.78), rgba(7,8,18,.70)) !important;
+  box-shadow:
+    0 20px 70px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.08) !important;
+  backdrop-filter:blur(22px) saturate(1.2) !important;
+}
+
+.brand{
+  gap:13px !important;
+}
+
+.logo{
+  width:48px !important;
+  height:48px !important;
+  border-radius:16px !important;
+  background:
+    radial-gradient(circle at 30% 20%, #ffffff 0%, #7afaff 18%, transparent 38%),
+    linear-gradient(135deg,var(--cyan),var(--purple) 70%, var(--purple2)) !important;
+  color:#02030a !important;
+  box-shadow:
+    0 0 40px rgba(50,234,255,.22),
+    0 0 70px rgba(123,92,255,.20),
+    inset 0 1px 1px rgba(255,255,255,.65) !important;
+}
+
+.brand h1{
+  font-size:17px !important;
+  letter-spacing:-.04em !important;
+}
+
+.brand p{
+  color:#8e98ab !important;
+  font-size:11.5px !important;
+}
+
+/* Professional buttons */
+.btn{
+  position:relative !important;
+  isolation:isolate !important;
+  border-radius:999px !important;
+  min-height:42px !important;
+  padding:11px 17px !important;
+  border:1px solid rgba(255,255,255,.13) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035)) !important;
+  color:#eef5ff !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 10px 28px rgba(0,0,0,.25) !important;
+  letter-spacing:-.02em !important;
+}
+
+.btn:before{
+  content:"";
+  position:absolute;
+  inset:1px;
+  border-radius:inherit;
+  background:linear-gradient(135deg, rgba(50,234,255,.14), transparent 42%, rgba(123,92,255,.15));
+  opacity:0;
+  transition:.22s ease;
+  z-index:-1;
+}
+
+.btn:hover{
+  transform:translateY(-2px) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.105), rgba(255,255,255,.045)) !important;
+  border-color:rgba(255,255,255,.23) !important;
+}
+
+.btn:hover:before{opacity:1}
+
+.btn-primary{
+  border:0 !important;
+  color:#031016 !important;
+  background:
+    radial-gradient(circle at 25% 10%, rgba(255,255,255,.75), transparent 30%),
+    linear-gradient(135deg,#73f6ff 0%, var(--cyan) 42%, #7fd5ff 100%) !important;
+  box-shadow:
+    0 0 36px rgba(50,234,255,.22),
+    0 16px 42px rgba(50,234,255,.13),
+    inset 0 1px 1px rgba(255,255,255,.7) !important;
+}
+
+.btn-purple{
+  border:0 !important;
+  background:
+    radial-gradient(circle at 25% 10%, rgba(255,255,255,.42), transparent 30%),
+    linear-gradient(135deg,#6f7bff 0%, var(--purple) 48%, var(--purple2) 100%) !important;
+  box-shadow:
+    0 0 38px rgba(123,92,255,.22),
+    0 16px 42px rgba(123,92,255,.14),
+    inset 0 1px 1px rgba(255,255,255,.38) !important;
+}
+
+.btn-red{
+  background:linear-gradient(180deg, rgba(255,73,120,.16), rgba(255,73,120,.07)) !important;
+  border-color:rgba(255,73,120,.34) !important;
+}
+
+.btn-green{
+  background:linear-gradient(180deg, rgba(56,248,180,.16), rgba(56,248,180,.06)) !important;
+  border-color:rgba(56,248,180,.30) !important;
+}
+
+.btn-amber{
+  background:linear-gradient(180deg, rgba(255,202,105,.16), rgba(255,202,105,.06)) !important;
+  border-color:rgba(255,202,105,.30) !important;
+}
+
+/* Carousel-style app nav */
+.nav{
+  position:relative !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  flex-wrap:nowrap !important;
+  gap:12px !important;
+  padding:10px !important;
+  margin:20px 0 22px !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  border-radius:28px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.025)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 18px 60px rgba(0,0,0,.25) !important;
+  scrollbar-width:none !important;
+  scroll-snap-type:x mandatory !important;
+}
+
+.nav::-webkit-scrollbar{display:none}
+
+.nav button{
+  scroll-snap-align:start !important;
+  flex:0 0 auto !important;
+  min-width:max-content !important;
+  padding:12px 18px !important;
+  background:rgba(255,255,255,.045) !important;
+  border:1px solid rgba(255,255,255,.095) !important;
+  border-radius:999px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.065) !important;
+}
+
+.nav button.active{
+  color:#041016 !important;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255,255,255,.75), transparent 35%),
+    linear-gradient(135deg,var(--cyan),#8eeeff) !important;
+  border-color:transparent !important;
+  box-shadow:
+    0 0 34px rgba(50,234,255,.18),
+    inset 0 1px 1px rgba(255,255,255,.5) !important;
+}
+
+/* Hero: more editorial and premium */
+.title{
+  max-width:980px !important;
+  font-size:clamp(46px,7.4vw,108px) !important;
+  line-height:.86 !important;
+  letter-spacing:-.085em !important;
+  background:linear-gradient(180deg,#fff 0%,#e8f6ff 48%,#9fb1c8 100%) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  color:transparent !important;
+  text-shadow:0 0 55px rgba(50,234,255,.08) !important;
+}
+
+.lead{
+  max-width:880px !important;
+  color:#c6d0df !important;
+  font-size:17px !important;
+  line-height:1.8 !important;
+}
+
+/* Status badges */
+.badge{
+  border-radius:999px !important;
+  border-color:rgba(255,255,255,.13) !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.035)) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08) !important;
+  color:#f6f9ff !important;
+}
+
+/* Panels and cards */
+.panel{
+  border-radius:30px !important;
+  border-color:rgba(255,255,255,.115) !important;
+  background:
+    linear-gradient(180deg, rgba(16,19,35,.76), rgba(6,8,18,.78)) !important;
+  box-shadow:
+    0 28px 100px rgba(0,0,0,.46),
+    inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+
+.panel:before{
+  background:
+    radial-gradient(circle at 18% 0%, rgba(50,234,255,.085), transparent 34%),
+    radial-gradient(circle at 90% 4%, rgba(123,92,255,.105), transparent 40%),
+    linear-gradient(120deg, rgba(255,255,255,.045), transparent 35%) !important;
+}
+
+.head{
+  padding:20px 22px !important;
+  border-bottom-color:rgba(255,255,255,.09) !important;
+}
+
+.head h2{
+  font-size:17px !important;
+  letter-spacing:-.035em !important;
+}
+
+.head p{
+  color:#8791a5 !important;
+}
+
+.pad{padding:22px !important}
+
+/* Landing feature cards */
+.hero-grid{
+  gap:20px !important;
+  margin-top:30px !important;
+}
+
+.feature,.review-card,.metric{
+  border-radius:24px !important;
+  border-color:rgba(255,255,255,.10) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.030)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.07),
+    0 18px 48px rgba(0,0,0,.22) !important;
+}
+
+.feature{
+  padding:20px !important;
+  min-height:145px !important;
+}
+
+.feature h3,.review-card h3{
+  font-size:18px !important;
+  letter-spacing:-.04em !important;
+}
+
+.feature p,.review-card p{
+  color:#b8c3d5 !important;
+}
+
+/* Metrics */
+.metric{
+  min-height:145px !important;
+}
+
+.metric span{
+  color:#8d98ad !important;
+  letter-spacing:.005em !important;
+}
+
+.metric strong{
+  font-size:36px !important;
+  color:#f7fbff !important;
+}
+
+.metric small{
+  color:#aab5c8 !important;
+}
+
+/* Forms */
+input,select,textarea{
+  border-radius:18px !important;
+  border-color:rgba(255,255,255,.13) !important;
+  background:rgba(3,5,12,.55) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+
+label{
+  color:#8791a5 !important;
+  letter-spacing:.01em !important;
+}
+
+input:focus,select:focus,textarea:focus{
+  border-color:rgba(50,234,255,.50) !important;
+  box-shadow:
+    0 0 0 4px rgba(50,234,255,.075),
+    inset 0 1px 0 rgba(255,255,255,.05) !important;
+}
+
+/* Tables */
+.tablewrap{
+  border-radius:0 0 30px 30px !important;
+}
+
+table{
+  border-collapse:separate !important;
+  border-spacing:0 !important;
+}
+
+th{
+  color:#8d98ad !important;
+  background:rgba(255,255,255,.028) !important;
+  letter-spacing:.03em !important;
+}
+
+td{
+  color:#c3ccdc !important;
+}
+
+tr:hover td{
+  background:rgba(255,255,255,.025) !important;
+}
+
+.grade{
+  border-radius:999px !important;
+  padding:6px 10px !important;
+}
+
+/* Auth and legal */
+.authbox{
+  margin-top:52px !important;
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.55),
+    0 0 80px rgba(50,234,255,.06) !important;
+}
+
+.legal{
+  margin-top:34px !important;
+}
+
+/* Modal */
+.modalbg{
+  background:rgba(0,0,0,.72) !important;
+  backdrop-filter:blur(24px) saturate(1.1) !important;
+}
+
+.modal{
+  box-shadow:
+    0 42px 140px rgba(0,0,0,.70),
+    0 0 90px rgba(50,234,255,.08) !important;
+}
+
+/* Onboarding */
+.check{
+  border-radius:22px !important;
+  background:linear-gradient(180deg, rgba(255,255,255,.060), rgba(255,255,255,.030)) !important;
+}
+
+.progress{
+  height:12px !important;
+  background:rgba(255,255,255,.075) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+
+.progress span{
+  background:linear-gradient(90deg,var(--cyan),#77f7ff,var(--purple)) !important;
+  box-shadow:0 0 28px rgba(50,234,255,.22) !important;
+}
+
+/* Make action clusters feel less cheap */
+.actions{
+  gap:10px !important;
+}
+
+/* Mobile premium polish */
+@media(max-width:980px){
+  .top{
+    top:8px !important;
+    border-radius:22px !important;
+  }
+  .title{
+    font-size:clamp(42px,12vw,64px) !important;
+    letter-spacing:-.075em !important;
+  }
+  .lead{
+    font-size:15.5px !important;
+  }
+  .nav{
+    border-radius:24px !important;
+    padding:8px !important;
+  }
+  .nav button{
+    padding:11px 15px !important;
+  }
+}
+
+/* Subtle entrance animations */
+.screen.active .title,
+.screen.active .lead,
+.screen.active .hero-grid,
+.screen.active .panel,
+.section.active .panel,
+.section.active .metric{
+  animation:veritasFade .38s ease both;
+}
+
+@keyframes veritasFade{
+  from{opacity:.0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
   </style>
 </head>
 <body>
@@ -60,12 +529,12 @@
     <div id="setupWarning" class="panel dangerbox hidden" style="margin-top:14px"><div class="pad"><b>Supabase is not connected.</b><p style="margin:8px 0 0;line-height:1.6">Paste your Project URL and anon/public key into config.js, then redeploy.</p></div></div>
 
     <section id="landingScreen" class="screen active">
-      <span class="badge"><span class="dot"></span>Public free beta</span>
-      <h1 class="title">Your trading truth, finally organized.</h1>
+      <span class="badge"><span class="dot"></span>Public beta · Free access</span>
+      <h1 class="title">A premium cockpit for disciplined traders.</h1>
       <p class="lead">Veritas Markets is a trader discipline, journaling, and prop-firm survival platform. Track trades, emotions, mistakes, reviews, risk settings, screenshots, and performance — without signals, broker noise, or motivational nonsense.</p>
       <div class="actions" style="margin-top:20px"><button class="btn btn-primary" onclick="showAuth('signup')">Start Free Beta</button><button class="btn" onclick="showAuth('login')">I already have an account</button></div>
       <div class="hero-grid">
-        <div class="panel"><div class="head"><div><h2>Launch-ready free beta</h2><p>No payments yet. Testers can use the platform and send feedback.</p></div><span class="badge">v1</span></div><div class="pad grid grid2">
+        <div class="panel"><div class="head"><div><h2>Professional trader workspace</h2><p>Journal, review, export, and improve without signal-group noise.</p></div><span class="badge">v1</span></div><div class="pad grid grid2">
           <div class="feature"><h3>Cloud Trade Journal</h3><p>Save, edit, view, delete, and export trades from Supabase.</p></div>
           <div class="feature"><h3>Discipline Reviews</h3><p>Daily and weekly review systems force accountability.</p></div>
           <div class="feature"><h3>Risk Settings</h3><p>Save account balance, default asset, risk %, and trade limits.</p></div>
@@ -73,7 +542,7 @@
           <div class="feature"><h3>Feedback Loop</h3><p>Beta testers can report bugs and request features directly.</p></div>
           <div class="feature"><h3>Risk Disclaimer</h3><p>Clear messaging: Veritas is not a broker, not advice, and not signals.</p></div>
         </div></div>
-        <div class="panel"><div class="head"><h2>Launch warning</h2><span class="badge"><span class="dot amber"></span>Real talk</span></div><div class="pad"><p class="lead" style="font-size:15px">This is free beta launch ready, not paid SaaS ready. No payments, no guarantees, no fake claims. Let users test it, gather feedback, and improve fast. If they break rules and blow accounts, that’s on them. 🚨</p></div></div>
+        <div class="panel"><div class="head"><h2>Straight truth</h2><span class="badge"><span class="dot amber"></span>Real talk</span></div><div class="pad"><p class="lead" style="font-size:15px">This is free beta launch ready, not paid SaaS ready. No payments, no guarantees, no fake claims. Let users test it, gather feedback, and improve fast. If they break rules and blow accounts, that’s on them. 🚨</p></div></div>
       </div>
     </section>
 
