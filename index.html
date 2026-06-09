@@ -520,254 +520,7 @@ tr:hover td{
 }
 
   
-/* =========================================================
-   VERITAS CINEMATIC LOADING SCREEN
-   Looks-only. Does not touch Supabase/app logic.
-   ========================================================= */
-#veritasLoader{
-  position:fixed;
-  inset:0;
-  z-index:9999;
-  display:grid;
-  place-items:center;
-  background:
-    radial-gradient(circle at 20% 15%, rgba(50,234,255,.16), transparent 30%),
-    radial-gradient(circle at 82% 10%, rgba(123,92,255,.20), transparent 34%),
-    radial-gradient(circle at 50% 100%, rgba(187,77,255,.10), transparent 38%),
-    linear-gradient(180deg,#01020a 0%,#050713 55%,#000 100%);
-  overflow:hidden;
-  transition:opacity .65s ease, visibility .65s ease, filter .65s ease;
-}
-
-#veritasLoader.loader-hide{
-  opacity:0;
-  visibility:hidden;
-  filter:blur(12px);
-  pointer-events:none;
-}
-
-#veritasLoader::before{
-  content:"";
-  position:absolute;
-  inset:-40%;
-  background:
-    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-  background-size:58px 58px;
-  transform:perspective(900px) rotateX(58deg) translateY(80px);
-  opacity:.45;
-  animation:veritasGrid 6s linear infinite;
-}
-
-#veritasLoader::after{
-  content:"";
-  position:absolute;
-  width:120vw;
-  height:120vh;
-  background:
-    conic-gradient(from 220deg at 50% 50%,
-      transparent 0deg,
-      rgba(50,234,255,.10) 45deg,
-      transparent 92deg,
-      rgba(123,92,255,.12) 178deg,
-      transparent 255deg,
-      rgba(187,77,255,.08) 315deg,
-      transparent 360deg);
-  animation:veritasAura 7s linear infinite;
-  opacity:.62;
-  mix-blend-mode:screen;
-}
-
-.loader-shell{
-  position:relative;
-  z-index:2;
-  width:min(92vw, 620px);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:36px;
-  background:
-    radial-gradient(circle at 25% 0%, rgba(50,234,255,.12), transparent 34%),
-    radial-gradient(circle at 90% 10%, rgba(123,92,255,.14), transparent 40%),
-    linear-gradient(180deg, rgba(16,19,36,.72), rgba(4,6,14,.72));
-  box-shadow:
-    0 40px 140px rgba(0,0,0,.65),
-    0 0 90px rgba(50,234,255,.12),
-    0 0 120px rgba(123,92,255,.10),
-    inset 0 1px 0 rgba(255,255,255,.08);
-  backdrop-filter:blur(24px) saturate(1.25);
-  padding:42px 34px 30px;
-  text-align:center;
-  overflow:hidden;
-}
-
-.loader-shell::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(120deg, transparent 0%, rgba(255,255,255,.08) 42%, transparent 58%);
-  transform:translateX(-120%);
-  animation:veritasShine 2.6s ease-in-out infinite;
-}
-
 .loader-orbit{
-  position:relative;
-  width:154px;
-  height:154px;
-  margin:0 auto 26px;
-  display:grid;
-  place-items:center;
-}
-
-.loader-orbit::before,
-.loader-orbit::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,.12);
-}
-
-.loader-orbit::before{
-  border-top-color:rgba(50,234,255,.95);
-  border-right-color:rgba(123,92,255,.6);
-  box-shadow:0 0 35px rgba(50,234,255,.18);
-  animation:veritasSpin 2.4s linear infinite;
-}
-
-.loader-orbit::after{
-  inset:13px;
-  border-left-color:rgba(187,77,255,.75);
-  border-bottom-color:rgba(50,234,255,.55);
-  animation:veritasSpinReverse 3.2s linear infinite;
-}
-
-.loader-v{
-  width:96px;
-  height:96px;
-  border-radius:28px;
-  display:grid;
-  place-items:center;
-  font-family:var(--display, "Sora", sans-serif);
-  font-size:58px;
-  font-weight:800;
-  letter-spacing:-.1em;
-  color:#030611;
-  background:
-    radial-gradient(circle at 28% 14%, rgba(255,255,255,.95), transparent 28%),
-    linear-gradient(135deg,#74f7ff 0%, #32eaff 38%, #7b5cff 75%, #bb4dff 100%);
-  box-shadow:
-    0 0 42px rgba(50,234,255,.30),
-    0 0 72px rgba(123,92,255,.24),
-    inset 0 1px 1px rgba(255,255,255,.7);
-  transform:translateX(-2px);
-  animation:veritasPulse 1.8s ease-in-out infinite;
-}
-
-.loader-title{
-  margin:0;
-  font-family:var(--display, "Sora", sans-serif);
-  font-size:clamp(34px, 6vw, 62px);
-  line-height:.9;
-  letter-spacing:-.075em;
-  background:linear-gradient(180deg,#ffffff 0%,#eaf8ff 50%,#9eb0c9 100%);
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-}
-
-.loader-sub{
-  margin:16px auto 0;
-  max-width:480px;
-  color:#9ba7bb;
-  line-height:1.7;
-  font-size:14.5px;
-  font-weight:600;
-}
-
-.loader-word{
-  display:inline-flex;
-  margin-top:20px;
-  min-width:128px;
-  justify-content:center;
-  padding:8px 12px;
-  border:1px solid rgba(50,234,255,.20);
-  border-radius:999px;
-  background:rgba(50,234,255,.055);
-  color:#32eaff;
-  font-family:var(--mono, monospace);
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  box-shadow:0 0 28px rgba(50,234,255,.10);
-}
-
-.loader-progress{
-  position:relative;
-  height:10px;
-  margin:28px auto 0;
-  border-radius:999px;
-  overflow:hidden;
-  background:rgba(255,255,255,.075);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-}
-
-.loader-progress span{
-  position:absolute;
-  inset:0 auto 0 0;
-  width:0%;
-  border-radius:999px;
-  background:linear-gradient(90deg,#32eaff,#76f5ff,#7b5cff,#bb4dff);
-  box-shadow:0 0 28px rgba(50,234,255,.26);
-  animation:veritasLoadBar 1.85s cubic-bezier(.22,.8,.24,1) forwards;
-}
-
-.loader-foot{
-  margin-top:16px;
-  color:#667187;
-  font-size:11.5px;
-  font-weight:700;
-}
-
-@keyframes veritasGrid{
-  from{transform:perspective(900px) rotateX(58deg) translateY(80px)}
-  to{transform:perspective(900px) rotateX(58deg) translateY(138px)}
-}
-
-@keyframes veritasAura{
-  from{transform:rotate(0deg) scale(1)}
-  to{transform:rotate(360deg) scale(1.02)}
-}
-
-@keyframes veritasSpin{
-  to{transform:rotate(360deg)}
-}
-
-@keyframes veritasSpinReverse{
-  to{transform:rotate(-360deg)}
-}
-
-@keyframes veritasPulse{
-  0%,100%{transform:translateX(-2px) scale(1)}
-  50%{transform:translateX(-2px) scale(1.045)}
-}
-
-@keyframes veritasShine{
-  0%{transform:translateX(-125%)}
-  45%,100%{transform:translateX(125%)}
-}
-
-@keyframes veritasLoadBar{
-  0%{width:0%}
-  50%{width:72%}
-  100%{width:100%}
-}
-
-@media(max-width:720px){
-  .loader-shell{
-    border-radius:30px;
-    padding:34px 22px 26px;
-  }
-  .loader-orbit{
     width:132px;
     height:132px;
   }
@@ -779,23 +532,756 @@ tr:hover td{
   }
 }
 
+  
+/* =========================================================
+   VERITAS ULTRA CINEMATIC TRADING LOADER
+   Visual only. Keeps Supabase/app logic intact.
+   ========================================================= */
+#veritasLoader{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 14% 8%, rgba(50,234,255,.15), transparent 28%),
+    radial-gradient(circle at 86% 3%, rgba(123,92,255,.20), transparent 34%),
+    radial-gradient(circle at 50% 104%, rgba(187,77,255,.11), transparent 40%),
+    linear-gradient(180deg,#01020A 0%, #050712 44%, #000 100%);
+  overflow:hidden;
+  transition:opacity .85s cubic-bezier(.16,1,.3,1), visibility .85s ease, filter .85s ease;
+}
+
+#veritasLoader.loader-hide{
+  opacity:0;
+  visibility:hidden;
+  filter:blur(18px) saturate(.8);
+  pointer-events:none;
+}
+
+#veritasLoader::before{
+  content:"";
+  position:absolute;
+  inset:-45%;
+  background:
+    linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+  background-size:62px 62px;
+  transform:perspective(900px) rotateX(62deg) translateY(80px);
+  opacity:.42;
+  animation:vmGridDrift 7s linear infinite;
+}
+
+#veritasLoader::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg, transparent 0%, rgba(50,234,255,.055) 50%, transparent 100%),
+    repeating-linear-gradient(180deg, rgba(255,255,255,.035) 0px, rgba(255,255,255,.035) 1px, transparent 2px, transparent 7px);
+  mix-blend-mode:screen;
+  opacity:.32;
+  animation:vmScan 3.8s ease-in-out infinite;
+}
+
+.vm-loader-noise{
+  position:absolute;
+  inset:0;
+  opacity:.12;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(255,255,255,.28) 0 1px, transparent 1px),
+    radial-gradient(circle at 80% 30%, rgba(255,255,255,.20) 0 1px, transparent 1px),
+    radial-gradient(circle at 45% 70%, rgba(255,255,255,.24) 0 1px, transparent 1px);
+  background-size:180px 180px, 220px 220px, 260px 260px;
+  animation:vmNoise 1.7s steps(2,end) infinite;
+}
+
+.vm-terminal{
+  position:relative;
+  z-index:3;
+  width:min(94vw, 1120px);
+  min-height:620px;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:18px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:38px;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(50,234,255,.10), transparent 34%),
+    radial-gradient(circle at 92% 10%, rgba(123,92,255,.12), transparent 40%),
+    linear-gradient(180deg, rgba(15,18,35,.75), rgba(3,5,14,.80));
+  box-shadow:
+    0 44px 170px rgba(0,0,0,.72),
+    0 0 110px rgba(50,234,255,.12),
+    0 0 150px rgba(123,92,255,.10),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(26px) saturate(1.25);
+  overflow:hidden;
+}
+
+.vm-terminal::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg, transparent 0%, rgba(255,255,255,.075) 46%, transparent 58%);
+  transform:translateX(-125%);
+  animation:vmGlassSweep 4.6s ease-in-out infinite;
+  pointer-events:none;
+}
+
+.vm-left,.vm-right{
+  position:relative;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:28px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025));
+  overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.vm-left{
+  min-height:582px;
+  padding:26px;
+}
+
+.vm-right{
+  min-height:582px;
+  padding:18px;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  gap:14px;
+}
+
+.vm-brand-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:28px;
+}
+
+.vm-v-wrap{
+  position:relative;
+  width:124px;
+  height:124px;
+  display:grid;
+  place-items:center;
+}
+
+.vm-v-wrap::before,
+.vm-v-wrap::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.13);
+}
+
+.vm-v-wrap::before{
+  border-top-color:#32EAFF;
+  border-right-color:rgba(123,92,255,.75);
+  animation:vmSpin 2.6s linear infinite;
+  box-shadow:0 0 38px rgba(50,234,255,.18);
+}
+
+.vm-v-wrap::after{
+  inset:13px;
+  border-left-color:rgba(187,77,255,.9);
+  border-bottom-color:rgba(50,234,255,.65);
+  animation:vmSpinReverse 3.4s linear infinite;
+}
+
+.vm-v{
+  position:relative;
+  z-index:2;
+  width:78px;
+  height:78px;
+  display:grid;
+  place-items:center;
+  border-radius:24px;
+  color:#02030A;
+  font-family:var(--display,"Sora",sans-serif);
+  font-size:48px;
+  font-weight:800;
+  letter-spacing:-.11em;
+  background:
+    radial-gradient(circle at 28% 12%, rgba(255,255,255,.98), transparent 28%),
+    linear-gradient(135deg,#7AF8FF 0%, #32EAFF 40%, #7B5CFF 78%, #BB4DFF 100%);
+  box-shadow:
+    0 0 46px rgba(50,234,255,.30),
+    0 0 74px rgba(123,92,255,.24),
+    inset 0 1px 1px rgba(255,255,255,.75);
+  transform:translateX(-2px);
+  animation:vmPulse 1.95s ease-in-out infinite;
+}
+
+.vm-status-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid rgba(50,234,255,.20);
+  border-radius:999px;
+  padding:9px 12px;
+  background:rgba(50,234,255,.055);
+  color:#32EAFF;
+  font-family:var(--mono,monospace);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.vm-status-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#38F8B4;
+  box-shadow:0 0 20px #38F8B4;
+  animation:vmBlink 1.15s ease-in-out infinite;
+}
+
+.vm-loader-title{
+  margin:0;
+  font-family:var(--display,"Sora",sans-serif);
+  font-size:clamp(48px, 7vw, 88px);
+  line-height:.86;
+  letter-spacing:-.085em;
+  background:linear-gradient(180deg,#FFFFFF 0%, #EAF8FF 48%, #9EB0C9 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-shadow:0 0 60px rgba(50,234,255,.08);
+}
+
+.vm-loader-sub{
+  max-width:620px;
+  margin:18px 0 0;
+  color:#AEB9CC;
+  line-height:1.75;
+  font-size:15px;
+  font-weight:600;
+}
+
+.vm-micro-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:28px;
+}
+
+.vm-micro{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  padding:14px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055);
+}
+
+.vm-micro span{
+  display:block;
+  color:#78849A;
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  margin-bottom:8px;
+}
+
+.vm-micro b{
+  display:block;
+  font-family:var(--mono,monospace);
+  font-size:18px;
+  color:#F7FBFF;
+}
+
+.vm-micro.good b{color:#38F8B4}
+.vm-micro.bad b{color:#FF4978}
+.vm-micro.info b{color:#32EAFF}
+
+.vm-progress-area{
+  position:absolute;
+  left:26px;
+  right:26px;
+  bottom:24px;
+}
+
+.vm-stage{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:center;
+  margin-bottom:12px;
+  color:#7D879B;
+  font-size:12px;
+  font-weight:800;
+}
+
+.vm-stage b{
+  color:#32EAFF;
+  font-family:var(--mono,monospace);
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+.vm-progress{
+  height:12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.075);
+  overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.vm-progress span{
+  display:block;
+  height:100%;
+  width:0%;
+  border-radius:999px;
+  background:linear-gradient(90deg,#32EAFF,#7AF8FF,#7B5CFF,#BB4DFF);
+  box-shadow:0 0 34px rgba(50,234,255,.26);
+  animation:vmLoadBar 5.2s cubic-bezier(.18,.8,.22,1) forwards;
+}
+
+.vm-chart-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+.vm-symbol{
+  font-family:var(--mono,monospace);
+  font-weight:800;
+  color:#F7FBFF;
+  letter-spacing:-.03em;
+}
+
+.vm-price{
+  font-family:var(--mono,monospace);
+  color:#38F8B4;
+  font-weight:800;
+}
+
+.vm-chart{
+  position:relative;
+  min-height:330px;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.09);
+  background:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
+    rgba(0,0,0,.16);
+  background-size:100% 54px, 64px 100%, 100% 100%;
+  overflow:hidden;
+}
+
+.vm-chart svg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+}
+
+.vm-line-main{
+  stroke-dasharray:900;
+  stroke-dashoffset:900;
+  animation:vmDrawLine 3.8s ease forwards .45s;
+}
+
+.vm-fill{
+  opacity:0;
+  animation:vmFadeIn 1.8s ease forwards 1.2s;
+}
+
+.vm-candles{
+  position:absolute;
+  inset:26px 24px 34px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.vm-candle{
+  position:relative;
+  width:10px;
+  border-radius:6px;
+  opacity:0;
+  transform:translateY(18px) scaleY(.6);
+  animation:vmCandleIn .55s ease forwards;
+}
+
+.vm-candle::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  width:2px;
+  top:-24px;
+  height:calc(100% + 48px);
+  border-radius:99px;
+  background:currentColor;
+  opacity:.55;
+}
+
+.vm-candle.buy{
+  color:#32EAFF;
+  background:linear-gradient(180deg,#A7FAFF,#32EAFF);
+  box-shadow:0 0 20px rgba(50,234,255,.18);
+}
+
+.vm-candle.sell{
+  color:#BB4DFF;
+  background:linear-gradient(180deg,#D688FF,#7B5CFF);
+  box-shadow:0 0 20px rgba(123,92,255,.18);
+}
+
+.vm-candle:nth-child(1){height:52px;margin-top:80px;animation-delay:.35s}
+.vm-candle:nth-child(2){height:90px;margin-top:42px;animation-delay:.48s}
+.vm-candle:nth-child(3){height:60px;margin-top:66px;animation-delay:.61s}
+.vm-candle:nth-child(4){height:128px;margin-top:8px;animation-delay:.74s}
+.vm-candle:nth-child(5){height:74px;margin-top:-12px;animation-delay:.87s}
+.vm-candle:nth-child(6){height:142px;margin-top:-42px;animation-delay:1.00s}
+.vm-candle:nth-child(7){height:84px;margin-top:-24px;animation-delay:1.13s}
+.vm-candle:nth-child(8){height:152px;margin-top:-70px;animation-delay:1.26s}
+.vm-candle:nth-child(9){height:92px;margin-top:-50px;animation-delay:1.39s}
+.vm-candle:nth-child(10){height:136px;margin-top:-95px;animation-delay:1.52s}
+.vm-candle:nth-child(11){height:76px;margin-top:-58px;animation-delay:1.65s}
+.vm-candle:nth-child(12){height:148px;margin-top:-108px;animation-delay:1.78s}
+.vm-candle:nth-child(13){height:82px;margin-top:-90px;animation-delay:1.91s}
+.vm-candle:nth-child(14){height:162px;margin-top:-132px;animation-delay:2.04s}
+.vm-candle:nth-child(15){height:96px;margin-top:-118px;animation-delay:2.17s}
+.vm-candle:nth-child(16){height:132px;margin-top:-150px;animation-delay:2.30s}
+
+.vm-order-flash{
+  position:absolute;
+  padding:9px 12px;
+  border-radius:999px;
+  font-family:var(--mono,monospace);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  backdrop-filter:blur(14px);
+  opacity:0;
+  animation:vmOrderFlash 4.8s ease infinite;
+}
+
+.vm-order-flash.buy{
+  left:8%;
+  top:22%;
+  color:#041016;
+  background:linear-gradient(135deg,#32EAFF,#90FBFF);
+  box-shadow:0 0 34px rgba(50,234,255,.24);
+}
+
+.vm-order-flash.sell{
+  right:10%;
+  bottom:24%;
+  color:#fff;
+  background:linear-gradient(135deg,#7B5CFF,#BB4DFF);
+  box-shadow:0 0 34px rgba(123,92,255,.24);
+  animation-delay:1.55s;
+}
+
+.vm-side-panels{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.vm-side-card{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:20px;
+  background:rgba(255,255,255,.04);
+  padding:14px;
+  min-height:95px;
+  position:relative;
+  overflow:hidden;
+}
+
+.vm-side-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg, transparent, rgba(255,255,255,.06), transparent);
+  transform:translateX(-120%);
+  animation:vmTinySweep 3.2s ease-in-out infinite;
+}
+
+.vm-side-card span{
+  display:block;
+  color:#78849A;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+
+.vm-side-card strong{
+  font-family:var(--mono,monospace);
+  font-size:20px;
+}
+
+.vm-side-card small{
+  display:block;
+  margin-top:8px;
+  color:#8E99AD;
+  line-height:1.45;
+}
+
+.vm-tape{
+  display:flex;
+  gap:10px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:20px;
+  background:rgba(0,0,0,.18);
+  padding:10px;
+}
+
+.vm-tape-track{
+  display:flex;
+  gap:10px;
+  animation:vmTape 12s linear infinite;
+}
+
+.vm-tick{
+  flex:0 0 auto;
+  min-width:105px;
+  border-radius:14px;
+  background:rgba(255,255,255,.045);
+  padding:9px 10px;
+  font-family:var(--mono,monospace);
+  font-size:11px;
+  color:#C3CCDC;
+}
+
+.vm-tick b{
+  display:block;
+  color:#F7FBFF;
+  margin-bottom:4px;
+}
+
+.vm-tick.up em{color:#38F8B4}
+.vm-tick.down em{color:#FF4978}
+.vm-tick em{font-style:normal}
+
+@keyframes vmGridDrift{
+  from{transform:perspective(900px) rotateX(62deg) translateY(80px)}
+  to{transform:perspective(900px) rotateX(62deg) translateY(142px)}
+}
+
+@keyframes vmScan{
+  0%,100%{transform:translateX(-28%);opacity:.20}
+  50%{transform:translateX(28%);opacity:.38}
+}
+
+@keyframes vmNoise{
+  0%,100%{transform:translate(0,0)}
+  50%{transform:translate(8px,-5px)}
+}
+
+@keyframes vmGlassSweep{
+  0%{transform:translateX(-125%)}
+  45%,100%{transform:translateX(125%)}
+}
+
+@keyframes vmSpin{to{transform:rotate(360deg)}}
+@keyframes vmSpinReverse{to{transform:rotate(-360deg)}}
+
+@keyframes vmPulse{
+  0%,100%{transform:translateX(-2px) scale(1)}
+  50%{transform:translateX(-2px) scale(1.045)}
+}
+
+@keyframes vmBlink{
+  0%,100%{opacity:1}
+  50%{opacity:.35}
+}
+
+@keyframes vmLoadBar{
+  0%{width:0%}
+  18%{width:22%}
+  42%{width:51%}
+  68%{width:78%}
+  100%{width:100%}
+}
+
+@keyframes vmDrawLine{
+  to{stroke-dashoffset:0}
+}
+
+@keyframes vmFadeIn{
+  to{opacity:1}
+}
+
+@keyframes vmCandleIn{
+  to{opacity:1;transform:translateY(0) scaleY(1)}
+}
+
+@keyframes vmOrderFlash{
+  0%,8%{opacity:0;transform:translateY(14px) scale(.94)}
+  18%,48%{opacity:1;transform:translateY(0) scale(1)}
+  64%,100%{opacity:0;transform:translateY(-10px) scale(.98)}
+}
+
+@keyframes vmTinySweep{
+  0%{transform:translateX(-125%)}
+  48%,100%{transform:translateX(125%)}
+}
+
+@keyframes vmTape{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+@media(max-width:980px){
+  .vm-terminal{
+    width:min(94vw, 720px);
+    min-height:auto;
+    grid-template-columns:1fr;
+    padding:12px;
+    border-radius:30px;
+  }
+  .vm-left,.vm-right{
+    min-height:auto;
+    border-radius:24px;
+  }
+  .vm-left{
+    padding:22px;
+    min-height:470px;
+  }
+  .vm-loader-title{
+    font-size:clamp(42px, 13vw, 68px);
+  }
+  .vm-micro-grid{
+    grid-template-columns:1fr;
+  }
+  .vm-chart{
+    min-height:270px;
+  }
+}
+
+@media(max-width:620px){
+  .vm-terminal{
+    max-height:92vh;
+    overflow:auto;
+  }
+  .vm-v-wrap{
+    width:104px;
+    height:104px;
+  }
+  .vm-v{
+    width:66px;
+    height:66px;
+    font-size:42px;
+    border-radius:20px;
+  }
+  .vm-side-panels{
+    grid-template-columns:1fr;
+  }
+}
+
   </style>
 </head>
 <body>
   <div id="veritasLoader" aria-label="Loading Veritas Markets">
-    <div class="loader-shell">
-      <div class="loader-orbit">
-        <div class="loader-v">V</div>
+    <div class="vm-loader-noise"></div>
+    <div class="vm-terminal">
+      <div class="vm-left">
+        <div class="vm-brand-row">
+          <div class="vm-v-wrap"><div class="vm-v">V</div></div>
+          <div class="vm-status-pill"><span class="vm-status-dot"></span><span id="vmStagePill">Booting terminal</span></div>
+        </div>
+
+        <h1 class="vm-loader-title">Veritas Markets</h1>
+        <p class="vm-loader-sub">Opening the trader discipline cockpit. Charts, risk engine, execution journal, and review systems are coming online.</p>
+
+        <div class="vm-micro-grid">
+          <div class="vm-micro info"><span>Core</span><b id="vmCore">SYNC</b></div>
+          <div class="vm-micro good"><span>Risk</span><b id="vmRisk">ARMED</b></div>
+          <div class="vm-micro bad"><span>Noise</span><b>BLOCKED</b></div>
+        </div>
+
+        <div class="vm-progress-area">
+          <div class="vm-stage"><span id="vmStageText">Initializing execution layer...</span><b id="vmPercent">0%</b></div>
+          <div class="vm-progress"><span></span></div>
+        </div>
       </div>
-      <h1 class="loader-title">Veritas Markets</h1>
-      <p class="loader-sub">Initializing trader discipline cockpit. Truth, risk, execution, review.</p>
-      <div class="loader-word" id="loaderWord">Truth</div>
-      <div class="loader-progress"><span></span></div>
-      <div class="loader-foot">No signals. No noise. Just execution data.</div>
+
+      <div class="vm-right">
+        <div class="vm-chart-head">
+          <div>
+            <div class="vm-symbol">XAUUSD · LIVE SIM</div>
+            <small style="color:#7D879B;font-weight:700">Veritas execution map</small>
+          </div>
+          <div class="vm-price" id="vmPrice">2364.82</div>
+        </div>
+
+        <div class="vm-chart">
+          <svg viewBox="0 0 760 360" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="vmLineGrad" x1="0" x2="1">
+                <stop offset="0%" stop-color="#32EAFF"/>
+                <stop offset="55%" stop-color="#7AF8FF"/>
+                <stop offset="100%" stop-color="#BB4DFF"/>
+              </linearGradient>
+              <linearGradient id="vmAreaGrad" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#32EAFF" stop-opacity=".22"/>
+                <stop offset="100%" stop-color="#32EAFF" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path class="vm-fill" d="M20 285 L72 250 L116 262 L170 220 L225 238 L285 178 L342 198 L405 138 L462 156 L520 102 L575 126 L636 72 L720 92 L720 360 L20 360 Z" fill="url(#vmAreaGrad)"/>
+            <path class="vm-line-main" d="M20 285 L72 250 L116 262 L170 220 L225 238 L285 178 L342 198 L405 138 L462 156 L520 102 L575 126 L636 72 L720 92" fill="none" stroke="url(#vmLineGrad)" stroke-width="5" stroke-linecap="round"/>
+          </svg>
+
+          <div class="vm-candles">
+            <div class="vm-candle buy"></div><div class="vm-candle sell"></div><div class="vm-candle buy"></div><div class="vm-candle buy"></div>
+            <div class="vm-candle sell"></div><div class="vm-candle buy"></div><div class="vm-candle sell"></div><div class="vm-candle buy"></div>
+            <div class="vm-candle buy"></div><div class="vm-candle sell"></div><div class="vm-candle buy"></div><div class="vm-candle sell"></div>
+            <div class="vm-candle buy"></div><div class="vm-candle buy"></div><div class="vm-candle sell"></div><div class="vm-candle buy"></div>
+          </div>
+
+          <div class="vm-order-flash buy">BUY · discipline confirmed</div>
+          <div class="vm-order-flash sell">SELL · risk checked</div>
+        </div>
+
+        <div class="vm-side-panels">
+          <div class="vm-side-card">
+            <span>Trade gate</span>
+            <strong style="color:#38F8B4">ALLOWED</strong>
+            <small>Rules checked before execution.</small>
+          </div>
+          <div class="vm-side-card">
+            <span>Journal</span>
+            <strong style="color:#32EAFF">READY</strong>
+            <small>Cloud review layer syncing.</small>
+          </div>
+        </div>
+
+        <div class="vm-tape">
+          <div class="vm-tape-track">
+            <div class="vm-tick up"><b>XAUUSD</b><em>+0.42%</em></div>
+            <div class="vm-tick down"><b>NAS100</b><em>-0.18%</em></div>
+            <div class="vm-tick up"><b>EURUSD</b><em>+0.09%</em></div>
+            <div class="vm-tick up"><b>DISCIPLINE</b><em>+100%</em></div>
+            <div class="vm-tick down"><b>REVENGE</b><em>BLOCKED</em></div>
+            <div class="vm-tick up"><b>RISK</b><em>CHECKED</em></div>
+            <div class="vm-tick up"><b>XAUUSD</b><em>+0.42%</em></div>
+            <div class="vm-tick down"><b>NAS100</b><em>-0.18%</em></div>
+            <div class="vm-tick up"><b>EURUSD</b><em>+0.09%</em></div>
+            <div class="vm-tick up"><b>DISCIPLINE</b><em>+100%</em></div>
+            <div class="vm-tick down"><b>REVENGE</b><em>BLOCKED</em></div>
+            <div class="vm-tick up"><b>RISK</b><em>CHECKED</em></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="wrap">
+<div class="wrap">
     <div class="top">
       <div class="brand"><div class="logo">V</div><div><h1>Veritas Markets</h1><p>Trader Discipline OS</p></div></div>
       <div class="actions">
@@ -989,30 +1475,55 @@ async function loadReviews(){const [daily,weekly]=await Promise.all([sb.from('da
 async function saveFeedback(){const payload={type:fbType.value,severity:fbSeverity.value,page:fbPage.value,message:fbMessage.value,user_email:currentUser?.email||null};if(!payload.message)return toast('Write feedback first',false);const {error}=await sb.from('feedback').insert(payload);if(error)return toast(error.message,false);fbMessage.value='';toast('Feedback sent')}
 function updateOnboarding(){const boxes=[...document.querySelectorAll('.oncheck')];const done=boxes.filter(b=>b.checked).length;onboardingProgress.style.width=(boxes.length?done/boxes.length*100:0)+'%'}
 
-(function(){
-  const words = ["Truth", "Risk", "Discipline", "Execution", "Review", "Veritas"];
-  let i = 0;
-  const wordEl = document.getElementById("loaderWord");
-  const loader = document.getElementById("veritasLoader");
 
-  const cycle = setInterval(() => {
-    if (!wordEl) return;
-    i = (i + 1) % words.length;
-    wordEl.textContent = words[i];
-  }, 280);
+(function(){
+  const loader = document.getElementById("veritasLoader");
+  const stageText = document.getElementById("vmStageText");
+  const stagePill = document.getElementById("vmStagePill");
+  const percent = document.getElementById("vmPercent");
+  const price = document.getElementById("vmPrice");
+  const core = document.getElementById("vmCore");
+  const risk = document.getElementById("vmRisk");
+
+  const stages = [
+    { t: 0, text: "Initializing execution layer...", pill: "Booting terminal", pct: "7%" },
+    { t: 900, text: "Loading market structure visuals...", pill: "Chart feed online", pct: "24%" },
+    { t: 1800, text: "Syncing journal and review engine...", pill: "Journal ready", pct: "46%" },
+    { t: 2900, text: "Checking risk permissions...", pill: "Risk engine armed", pct: "68%" },
+    { t: 4050, text: "Blocking noise. Preparing cockpit...", pill: "Noise blocked", pct: "86%" },
+    { t: 5200, text: "Veritas is ready.", pill: "Cockpit ready", pct: "100%" }
+  ];
+
+  stages.forEach(s => {
+    setTimeout(() => {
+      if(stageText) stageText.textContent = s.text;
+      if(stagePill) stagePill.textContent = s.pill;
+      if(percent) percent.textContent = s.pct;
+      if(core && s.t > 1600) core.textContent = "LIVE";
+      if(risk && s.t > 2800) risk.textContent = "GREEN";
+    }, s.t);
+  });
+
+  let base = 2364.82;
+  const priceTimer = setInterval(() => {
+    if(!price) return;
+    base += (Math.random() - 0.42) * 1.8;
+    price.textContent = base.toFixed(2);
+    price.style.color = Math.random() > .38 ? "#38F8B4" : "#FF4978";
+  }, 260);
 
   function hideLoader(){
-    if (!loader) return;
-    clearInterval(cycle);
+    if(!loader) return;
+    clearInterval(priceTimer);
     loader.classList.add("loader-hide");
-    setTimeout(() => loader.remove(), 850);
+    setTimeout(() => loader.remove(), 950);
   }
 
   window.addEventListener("load", () => {
-    setTimeout(hideLoader, 1150);
+    setTimeout(hideLoader, 5850);
   });
 
-  setTimeout(hideLoader, 3200);
+  setTimeout(hideLoader, 7200);
 })();
 
 init()
