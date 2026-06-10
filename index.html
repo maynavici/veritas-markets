@@ -1333,63 +1333,6 @@ max-width:620px;
 }
 
   
-/* VERITAS CELESTIAL AUTO-SOUND FALLBACK */
-.vm-audio-fallback{
-  position:absolute;
-  z-index:10;
-  left:50%;
-  bottom:12%;
-  transform:translateX(-50%) translateY(12px);
-  border:1px solid rgba(255,255,255,.16);
-  border-radius:999px;
-  padding:12px 17px;
-  background:
-    radial-gradient(circle at 24% 0%, rgba(255,255,255,.18), transparent 34%),
-    linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.035));
-  color:#F7FBFF;
-  font-family:var(--ui,"Plus Jakarta Sans",sans-serif);
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:.10em;
-  text-transform:uppercase;
-  cursor:pointer;
-  backdrop-filter:blur(18px) saturate(1.2);
-  box-shadow:
-    0 18px 60px rgba(0,0,0,.40),
-    0 0 38px rgba(50,234,255,.12),
-    inset 0 1px 0 rgba(255,255,255,.10);
-  opacity:0;
-  pointer-events:none;
-  transition:.28s ease;
-}
-
-.vm-audio-fallback.show{
-  opacity:1;
-  pointer-events:auto;
-  transform:translateX(-50%) translateY(0);
-}
-
-.vm-audio-fallback:hover{
-  border-color:rgba(50,234,255,.42);
-  box-shadow:
-    0 20px 70px rgba(0,0,0,.45),
-    0 0 46px rgba(50,234,255,.18),
-    inset 0 1px 0 rgba(255,255,255,.13);
-}
-
-.vm-audio-fallback.unlocked{
-  color:#02030A;
-  background:
-    radial-gradient(circle at 24% 0%, rgba(255,255,255,.65), transparent 34%),
-    linear-gradient(135deg,#7AF8FF,#32EAFF);
-}
-
-@media(max-width:720px){
-  .vm-audio-fallback{
-    bottom:10%;
-    font-size:10px;
-    padding:10px 13px;
-  }
 }
 
   </style>
@@ -1413,9 +1356,7 @@ max-width:620px;
       </div>
       <div class="vm-progress-minimal"><span></span></div>
     </div>
-    
-    <button class="vm-audio-fallback" id="vmAudioFallback" type="button">Unlock celestial sound</button>
-    <div class="vm-final-flash"></div>
+<div class="vm-final-flash"></div>
   </div>
 
 <div class="wrap">
@@ -1615,19 +1556,10 @@ function updateOnboarding(){const boxes=[...document.querySelectorAll('.oncheck'
 
 
 
+
 (function(){
   const loader = document.getElementById("veritasLoader");
-  const fallback = document.getElementById("vmAudioFallback");
   let audioStarted = false;
-  let ctx = null;
-
-  function makeGain(context, value, start, attack, release, end){
-    const g = context.createGain();
-    g.gain.setValueAtTime(0.0001, start);
-    g.gain.exponentialRampToValueAtTime(value, start + attack);
-    g.gain.exponentialRampToValueAtTime(0.0001, end || (start + release));
-    return g;
-  }
 
   function playTone(context, opts){
     const osc = context.createOscillator();
@@ -1657,25 +1589,25 @@ function updateOnboarding(){const boxes=[...document.querySelectorAll('.oncheck'
   }
 
   function playCelestialIntro(){
-    if(audioStarted) return true;
+    if(audioStarted) return;
     audioStarted = true;
 
     try{
       const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if(!AudioContext) throw new Error("No AudioContext");
+      if(!AudioContext) return;
 
-      ctx = new AudioContext();
+      const ctx = new AudioContext();
 
-      // If browser blocks Web Audio, this may be suspended. Try resume.
-      const resumePromise = ctx.resume ? ctx.resume() : Promise.resolve();
+      if(ctx.resume){
+        ctx.resume().catch(() => {});
+      }
 
       const master = ctx.createGain();
       master.gain.setValueAtTime(0.0001, ctx.currentTime);
-      master.gain.exponentialRampToValueAtTime(0.28, ctx.currentTime + 0.45);
+      master.gain.exponentialRampToValueAtTime(0.30, ctx.currentTime + 0.45);
       master.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 7.25);
       master.connect(ctx.destination);
 
-      // Reverb-ish delay network
       const delay = ctx.createDelay();
       const feedback = ctx.createGain();
       const wet = ctx.createGain();
@@ -1692,17 +1624,18 @@ function updateOnboarding(){const boxes=[...document.querySelectorAll('.oncheck'
       dry.connect(master);
 
       const bus = ctx.createGain();
-      bus.gain.setValueAtTime(1, ctx.currentTime);
       bus.connect(dry);
       bus.connect(delay);
 
       // Deep studio boom
       playTone(ctx, {
         destination: bus,
-        start: 0.08, end: 2.75,
-        freq: 64, toFreq: 28,
+        start: 0.08,
+        end: 2.75,
+        freq: 64,
+        toFreq: 28,
         type: "sine",
-        gain: 0.60,
+        gain: 0.62,
         attack: 0.08,
         filter: 160
       });
@@ -1717,32 +1650,32 @@ function updateOnboarding(){const boxes=[...document.querySelectorAll('.oncheck'
           freq,
           toFreq: freq * 1.012,
           type: i % 2 ? "triangle" : "sine",
-          gain: 0.032,
+          gain: 0.034,
           attack: 1.15 + i * 0.07,
           filter: 4200,
           q: 0.45
         });
       });
 
-      // High shimmer arpeggio
+      // Shimmer arpeggio
       const arp = [783.99, 987.77, 1174.66, 1567.98, 1975.53, 2349.32];
-      for(let i=0; i<18; i++){
-        const freq = arp[i % arp.length] * (i > 8 ? 1.25 : 1);
+      for(let i=0; i<20; i++){
+        const freq = arp[i % arp.length] * (i > 9 ? 1.25 : 1);
         playTone(ctx, {
           destination: bus,
-          start: 1.25 + i * 0.18,
-          end: 2.65 + i * 0.18,
+          start: 1.20 + i * 0.17,
+          end: 2.55 + i * 0.17,
           freq,
           toFreq: freq * 1.015,
           type: "sine",
-          gain: 0.026,
+          gain: 0.027,
           attack: 0.045,
           filter: 9000,
           q: 0.9
         });
       }
 
-      // White cosmic sweep
+      // Cosmic sweep
       const bufferSize = Math.floor(ctx.sampleRate * 5.8);
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const data = buffer.getChannelData(0);
@@ -1750,6 +1683,7 @@ function updateOnboarding(){const boxes=[...document.querySelectorAll('.oncheck'
         const fade = Math.sin((i / bufferSize) * Math.PI);
         data[i] = (Math.random()*2-1) * fade * 0.38;
       }
+
       const noise = ctx.createBufferSource();
       noise.buffer = buffer;
       const nFilter = ctx.createBiquadFilter();
@@ -1767,13 +1701,15 @@ function updateOnboarding(){const boxes=[...document.querySelectorAll('.oncheck'
       noise.start(ctx.currentTime + 0.8);
       noise.stop(ctx.currentTime + 6.7);
 
-      // Final heavenly hit
+      // Final cinematic hit
       playTone(ctx, {
         destination: bus,
-        start: 4.65, end: 7.2,
-        freq: 98, toFreq: 49,
+        start: 4.65,
+        end: 7.2,
+        freq: 98,
+        toFreq: 49,
         type: "sine",
-        gain: 0.34,
+        gain: 0.36,
         attack: 0.06,
         filter: 220
       });
@@ -1781,62 +1717,29 @@ function updateOnboarding(){const boxes=[...document.querySelectorAll('.oncheck'
       [392, 493.88, 587.33, 783.99].forEach((freq, i) => {
         playTone(ctx, {
           destination: bus,
-          start: 4.75 + i*0.04, end: 7.15,
-          freq, toFreq: freq*1.004,
+          start: 4.75 + i*0.04,
+          end: 7.15,
+          freq,
+          toFreq: freq*1.004,
           type: "triangle",
-          gain: 0.044,
+          gain: 0.046,
           attack: 0.24,
           filter: 6000
         });
       });
 
-      Promise.resolve(resumePromise).then(() => {
-        if(ctx.state === "suspended"){
-          audioStarted = false;
-          if(fallback) fallback.classList.add("show");
-        }else if(fallback){
-          fallback.classList.remove("show");
-          fallback.classList.add("unlocked");
-          fallback.textContent = "Celestial sound on";
-        }
-      }).catch(() => {
-        audioStarted = false;
-        if(fallback) fallback.classList.add("show");
-      });
-
-      setTimeout(() => {
-        if(ctx && ctx.state === "suspended"){
-          audioStarted = false;
-          if(fallback) fallback.classList.add("show");
-        }
-      }, 450);
-
-      return true;
     }catch(e){
-      audioStarted = false;
-      if(fallback) fallback.classList.add("show");
-      return false;
+      // Browser blocked or unsupported. No prompt shown because user requested auto-only.
+      console.warn("Auto sound blocked or unsupported:", e);
     }
   }
 
-  // Attempt automatic sound immediately.
+  // Try as early as possible
   playCelestialIntro();
 
-  // If blocked, fallback click unlocks it.
-  if(fallback){
-    fallback.addEventListener("click", () => {
-      playCelestialIntro();
-      fallback.classList.add("unlocked");
-      fallback.textContent = "Celestial sound on";
-      fallback.classList.remove("show");
-    });
-    fallback.addEventListener("touchstart", () => {
-      playCelestialIntro();
-      fallback.classList.add("unlocked");
-      fallback.textContent = "Celestial sound on";
-      fallback.classList.remove("show");
-    }, { passive:true });
-  }
+  // Try again when DOM and page finish loading
+  document.addEventListener("DOMContentLoaded", playCelestialIntro);
+  window.addEventListener("load", playCelestialIntro);
 
   function hideLoader(){
     if(!loader) return;
