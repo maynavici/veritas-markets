@@ -1333,16 +1333,13 @@ max-width:620px;
 }
 
   
-/* VERITAS INTRO SOUND CTA */
-.vm-sound-cta{
+/* VERITAS CELESTIAL AUTO-SOUND FALLBACK */
+.vm-audio-fallback{
   position:absolute;
-  z-index:9;
+  z-index:10;
   left:50%;
-  bottom:13%;
+  bottom:12%;
   transform:translateX(-50%) translateY(12px);
-  display:flex;
-  align-items:center;
-  gap:10px;
   border:1px solid rgba(255,255,255,.16);
   border-radius:999px;
   padding:12px 17px;
@@ -1351,9 +1348,9 @@ max-width:620px;
     linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.035));
   color:#F7FBFF;
   font-family:var(--ui,"Plus Jakarta Sans",sans-serif);
-  font-size:12px;
+  font-size:11px;
   font-weight:900;
-  letter-spacing:.08em;
+  letter-spacing:.10em;
   text-transform:uppercase;
   cursor:pointer;
   backdrop-filter:blur(18px) saturate(1.2);
@@ -1362,10 +1359,17 @@ max-width:620px;
     0 0 38px rgba(50,234,255,.12),
     inset 0 1px 0 rgba(255,255,255,.10);
   opacity:0;
-  animation:vmSoundCtaIn 5.8s cubic-bezier(.16,1,.3,1) forwards;
+  pointer-events:none;
+  transition:.28s ease;
 }
 
-.vm-sound-cta:hover{
+.vm-audio-fallback.show{
+  opacity:1;
+  pointer-events:auto;
+  transform:translateX(-50%) translateY(0);
+}
+
+.vm-audio-fallback:hover{
   border-color:rgba(50,234,255,.42);
   box-shadow:
     0 20px 70px rgba(0,0,0,.45),
@@ -1373,35 +1377,16 @@ max-width:620px;
     inset 0 1px 0 rgba(255,255,255,.13);
 }
 
-.vm-sound-cta span:first-child{
-  width:9px;
-  height:9px;
-  border-radius:50%;
-  background:#32EAFF;
-  box-shadow:0 0 18px #32EAFF;
-}
-
-.vm-sound-cta.sound-on{
+.vm-audio-fallback.unlocked{
   color:#02030A;
   background:
     radial-gradient(circle at 24% 0%, rgba(255,255,255,.65), transparent 34%),
     linear-gradient(135deg,#7AF8FF,#32EAFF);
 }
 
-.vm-sound-cta.sound-on span:first-child{
-  background:#02030A;
-  box-shadow:none;
-}
-
-@keyframes vmSoundCtaIn{
-  0%,32%{opacity:0;transform:translateX(-50%) translateY(14px);filter:blur(8px)}
-  50%,82%{opacity:1;transform:translateX(-50%) translateY(0);filter:blur(0)}
-  100%{opacity:0;transform:translateX(-50%) translateY(-10px);filter:blur(8px)}
-}
-
 @media(max-width:720px){
-  .vm-sound-cta{
-    bottom:11%;
+  .vm-audio-fallback{
+    bottom:10%;
     font-size:10px;
     padding:10px 13px;
   }
@@ -1429,7 +1414,7 @@ max-width:620px;
       <div class="vm-progress-minimal"><span></span></div>
     </div>
     
-    <button class="vm-sound-cta" id="vmSoundCta" type="button"><span></span><span>Tap for sound</span></button>
+    <button class="vm-audio-fallback" id="vmAudioFallback" type="button">Unlock celestial sound</button>
     <div class="vm-final-flash"></div>
   </div>
 
@@ -1632,112 +1617,225 @@ function updateOnboarding(){const boxes=[...document.querySelectorAll('.oncheck'
 
 (function(){
   const loader = document.getElementById("veritasLoader");
-  const soundBtn = document.getElementById("vmSoundCta");
-  let soundPlayed = false;
+  const fallback = document.getElementById("vmAudioFallback");
+  let audioStarted = false;
+  let ctx = null;
 
-  function playVeritasIntroSound(){
-    if(soundPlayed) return;
-    soundPlayed = true;
+  function makeGain(context, value, start, attack, release, end){
+    const g = context.createGain();
+    g.gain.setValueAtTime(0.0001, start);
+    g.gain.exponentialRampToValueAtTime(value, start + attack);
+    g.gain.exponentialRampToValueAtTime(0.0001, end || (start + release));
+    return g;
+  }
+
+  function playTone(context, opts){
+    const osc = context.createOscillator();
+    const gain = context.createGain();
+    const filter = context.createBiquadFilter();
+
+    osc.type = opts.type || "sine";
+    osc.frequency.setValueAtTime(opts.freq, context.currentTime + opts.start);
+    if(opts.toFreq){
+      osc.frequency.exponentialRampToValueAtTime(opts.toFreq, context.currentTime + opts.end);
+    }
+
+    filter.type = opts.filterType || "lowpass";
+    filter.frequency.setValueAtTime(opts.filter || 9000, context.currentTime + opts.start);
+    filter.Q.setValueAtTime(opts.q || 0.7, context.currentTime + opts.start);
+
+    gain.gain.setValueAtTime(0.0001, context.currentTime + opts.start);
+    gain.gain.exponentialRampToValueAtTime(opts.gain || 0.05, context.currentTime + opts.start + (opts.attack || 0.4));
+    gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + opts.end);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(opts.destination);
+
+    osc.start(context.currentTime + opts.start);
+    osc.stop(context.currentTime + opts.end + 0.05);
+  }
+
+  function playCelestialIntro(){
+    if(audioStarted) return true;
+    audioStarted = true;
 
     try{
       const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if(!AudioContext) return;
+      if(!AudioContext) throw new Error("No AudioContext");
 
-      const ctx = new AudioContext();
+      ctx = new AudioContext();
+
+      // If browser blocks Web Audio, this may be suspended. Try resume.
+      const resumePromise = ctx.resume ? ctx.resume() : Promise.resolve();
+
       const master = ctx.createGain();
       master.gain.setValueAtTime(0.0001, ctx.currentTime);
-      master.gain.exponentialRampToValueAtTime(0.34, ctx.currentTime + 0.08);
-      master.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.9);
+      master.gain.exponentialRampToValueAtTime(0.28, ctx.currentTime + 0.45);
+      master.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 7.25);
       master.connect(ctx.destination);
 
-      const boom = ctx.createOscillator();
-      const boomGain = ctx.createGain();
-      const boomFilter = ctx.createBiquadFilter();
-      boom.type = "sine";
-      boom.frequency.setValueAtTime(72, ctx.currentTime);
-      boom.frequency.exponentialRampToValueAtTime(32, ctx.currentTime + 1.45);
-      boomGain.gain.setValueAtTime(0.0001, ctx.currentTime);
-      boomGain.gain.exponentialRampToValueAtTime(0.90, ctx.currentTime + 0.06);
-      boomGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.85);
-      boomFilter.type = "lowpass";
-      boomFilter.frequency.setValueAtTime(180, ctx.currentTime);
-      boom.connect(boomFilter);
-      boomFilter.connect(boomGain);
-      boomGain.connect(master);
-      boom.start(ctx.currentTime);
-      boom.stop(ctx.currentTime + 1.9);
+      // Reverb-ish delay network
+      const delay = ctx.createDelay();
+      const feedback = ctx.createGain();
+      const wet = ctx.createGain();
+      delay.delayTime.setValueAtTime(0.32, ctx.currentTime);
+      feedback.gain.setValueAtTime(0.28, ctx.currentTime);
+      wet.gain.setValueAtTime(0.18, ctx.currentTime);
+      delay.connect(feedback);
+      feedback.connect(delay);
+      delay.connect(wet);
+      wet.connect(master);
 
-      const notes = [196, 246.94, 293.66, 392, 493.88];
-      notes.forEach((freq, idx) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
-        osc.type = idx % 2 ? "triangle" : "sine";
-        osc.frequency.setValueAtTime(freq, ctx.currentTime + 0.15 + idx*0.035);
-        osc.frequency.exponentialRampToValueAtTime(freq*1.55, ctx.currentTime + 3.35);
-        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.060, ctx.currentTime + 0.55 + idx*0.06);
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.7);
+      const dry = ctx.createGain();
+      dry.gain.setValueAtTime(0.82, ctx.currentTime);
+      dry.connect(master);
 
-        osc.connect(gain);
-        if(pan){
-          gain.connect(pan);
-          pan.pan.setValueAtTime((idx-2)/3, ctx.currentTime);
-          pan.connect(master);
-        }else{
-          gain.connect(master);
-        }
+      const bus = ctx.createGain();
+      bus.gain.setValueAtTime(1, ctx.currentTime);
+      bus.connect(dry);
+      bus.connect(delay);
 
-        osc.start(ctx.currentTime + 0.12 + idx*0.035);
-        osc.stop(ctx.currentTime + 3.75);
+      // Deep studio boom
+      playTone(ctx, {
+        destination: bus,
+        start: 0.08, end: 2.75,
+        freq: 64, toFreq: 28,
+        type: "sine",
+        gain: 0.60,
+        attack: 0.08,
+        filter: 160
       });
 
-      const bufferSize = Math.floor(ctx.sampleRate * 2.4);
+      // Celestial chord pad
+      const chord = [146.83, 196.00, 246.94, 293.66, 369.99, 493.88, 587.33];
+      chord.forEach((freq, i) => {
+        playTone(ctx, {
+          destination: bus,
+          start: 0.35 + i * 0.08,
+          end: 6.75 + i * 0.05,
+          freq,
+          toFreq: freq * 1.012,
+          type: i % 2 ? "triangle" : "sine",
+          gain: 0.032,
+          attack: 1.15 + i * 0.07,
+          filter: 4200,
+          q: 0.45
+        });
+      });
+
+      // High shimmer arpeggio
+      const arp = [783.99, 987.77, 1174.66, 1567.98, 1975.53, 2349.32];
+      for(let i=0; i<18; i++){
+        const freq = arp[i % arp.length] * (i > 8 ? 1.25 : 1);
+        playTone(ctx, {
+          destination: bus,
+          start: 1.25 + i * 0.18,
+          end: 2.65 + i * 0.18,
+          freq,
+          toFreq: freq * 1.015,
+          type: "sine",
+          gain: 0.026,
+          attack: 0.045,
+          filter: 9000,
+          q: 0.9
+        });
+      }
+
+      // White cosmic sweep
+      const bufferSize = Math.floor(ctx.sampleRate * 5.8);
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const data = buffer.getChannelData(0);
-      for(let i=0;i<bufferSize;i++) data[i] = (Math.random()*2-1) * (1 - i/bufferSize);
+      for(let i=0; i<bufferSize; i++){
+        const fade = Math.sin((i / bufferSize) * Math.PI);
+        data[i] = (Math.random()*2-1) * fade * 0.38;
+      }
       const noise = ctx.createBufferSource();
       noise.buffer = buffer;
-      const noiseGain = ctx.createGain();
-      const noiseFilter = ctx.createBiquadFilter();
-      noiseFilter.type = "bandpass";
-      noiseFilter.frequency.setValueAtTime(420, ctx.currentTime + 0.25);
-      noiseFilter.frequency.exponentialRampToValueAtTime(5200, ctx.currentTime + 2.7);
-      noiseFilter.Q.setValueAtTime(1.2, ctx.currentTime);
-      noiseGain.gain.setValueAtTime(0.0001, ctx.currentTime + 0.22);
-      noiseGain.gain.exponentialRampToValueAtTime(0.065, ctx.currentTime + 1.05);
-      noiseGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.2);
-      noise.connect(noiseFilter);
-      noiseFilter.connect(noiseGain);
-      noiseGain.connect(master);
-      noise.start(ctx.currentTime + 0.22);
-      noise.stop(ctx.currentTime + 3.25);
+      const nFilter = ctx.createBiquadFilter();
+      const nGain = ctx.createGain();
+      nFilter.type = "bandpass";
+      nFilter.frequency.setValueAtTime(380, ctx.currentTime + 0.8);
+      nFilter.frequency.exponentialRampToValueAtTime(6400, ctx.currentTime + 5.8);
+      nFilter.Q.setValueAtTime(1.25, ctx.currentTime);
+      nGain.gain.setValueAtTime(0.0001, ctx.currentTime + 0.8);
+      nGain.gain.exponentialRampToValueAtTime(0.070, ctx.currentTime + 2.4);
+      nGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 6.6);
+      noise.connect(nFilter);
+      nFilter.connect(nGain);
+      nGain.connect(bus);
+      noise.start(ctx.currentTime + 0.8);
+      noise.stop(ctx.currentTime + 6.7);
 
-      const hit = ctx.createOscillator();
-      const hitGain = ctx.createGain();
-      hit.type = "sine";
-      hit.frequency.setValueAtTime(98, ctx.currentTime + 3.05);
-      hit.frequency.exponentialRampToValueAtTime(49, ctx.currentTime + 3.6);
-      hitGain.gain.setValueAtTime(0.0001, ctx.currentTime + 3.05);
-      hitGain.gain.exponentialRampToValueAtTime(0.55, ctx.currentTime + 3.11);
-      hitGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.86);
-      hit.connect(hitGain);
-      hitGain.connect(master);
-      hit.start(ctx.currentTime + 3.05);
-      hit.stop(ctx.currentTime + 3.9);
+      // Final heavenly hit
+      playTone(ctx, {
+        destination: bus,
+        start: 4.65, end: 7.2,
+        freq: 98, toFreq: 49,
+        type: "sine",
+        gain: 0.34,
+        attack: 0.06,
+        filter: 220
+      });
 
-      if(soundBtn){
-        soundBtn.classList.add("sound-on");
-        soundBtn.innerHTML = "<span></span><span>Sound on</span>";
-      }
+      [392, 493.88, 587.33, 783.99].forEach((freq, i) => {
+        playTone(ctx, {
+          destination: bus,
+          start: 4.75 + i*0.04, end: 7.15,
+          freq, toFreq: freq*1.004,
+          type: "triangle",
+          gain: 0.044,
+          attack: 0.24,
+          filter: 6000
+        });
+      });
+
+      Promise.resolve(resumePromise).then(() => {
+        if(ctx.state === "suspended"){
+          audioStarted = false;
+          if(fallback) fallback.classList.add("show");
+        }else if(fallback){
+          fallback.classList.remove("show");
+          fallback.classList.add("unlocked");
+          fallback.textContent = "Celestial sound on";
+        }
+      }).catch(() => {
+        audioStarted = false;
+        if(fallback) fallback.classList.add("show");
+      });
+
+      setTimeout(() => {
+        if(ctx && ctx.state === "suspended"){
+          audioStarted = false;
+          if(fallback) fallback.classList.add("show");
+        }
+      }, 450);
+
+      return true;
     }catch(e){
-      console.warn("Veritas intro sound failed:", e);
+      audioStarted = false;
+      if(fallback) fallback.classList.add("show");
+      return false;
     }
   }
 
-  if(soundBtn){
-    soundBtn.addEventListener("click", playVeritasIntroSound, { once:true });
-    soundBtn.addEventListener("touchstart", playVeritasIntroSound, { once:true });
+  // Attempt automatic sound immediately.
+  playCelestialIntro();
+
+  // If blocked, fallback click unlocks it.
+  if(fallback){
+    fallback.addEventListener("click", () => {
+      playCelestialIntro();
+      fallback.classList.add("unlocked");
+      fallback.textContent = "Celestial sound on";
+      fallback.classList.remove("show");
+    });
+    fallback.addEventListener("touchstart", () => {
+      playCelestialIntro();
+      fallback.classList.add("unlocked");
+      fallback.textContent = "Celestial sound on";
+      fallback.classList.remove("show");
+    }, { passive:true });
   }
 
   function hideLoader(){
@@ -1747,10 +1845,10 @@ function updateOnboarding(){const boxes=[...document.querySelectorAll('.oncheck'
   }
 
   window.addEventListener("load", () => {
-    setTimeout(hideLoader, 6300);
+    setTimeout(hideLoader, 7600);
   });
 
-  setTimeout(hideLoader, 7500);
+  setTimeout(hideLoader, 9000);
 })();
 
 init()
